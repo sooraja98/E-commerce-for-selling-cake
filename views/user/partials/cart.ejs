@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+   body {
+  background: #ebe1d3;
+  background: white;
+  background:white;
+  min-height: 100vh;
+}
+    </style>
+</head>
+<body>
+  <%- include('../layouts/user-profile-navbar')%>
+    
+
+<section>
+    <div class="px-4 px-lg-0">
+    
+        <div class="pb-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+      
+                <!-- Shopping cart table -->
+                <div class="table-responsive">
+                  <% if(cartList!=null){%>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="border-0 bg-light">
+                          <div class="p-2 px-3 text-uppercase">Product</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                          <div class="py-2 text-uppercase">Price</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                          <div class="py-2 text-uppercase">Quantity</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                          <div class="py-2 text-uppercase">Remove</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <% cartList.forEach((item)=>{%>
+                      <tr>
+                        <th scope="row" class="border-0">
+                          <div class="p-2">
+                            <img src="/product-image/<%=item.image%>" alt="" width="70" class="img-fluid rounded shadow-sm">
+                            <div class="ml-3 d-inline-block align-middle">
+                              <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle"><%=item.name%></a></h5>
+                            </div>
+                          </div>
+                        </th>
+                        <td class="border-0 align-middle"><strong><%=item.price%></strong></td>
+                        <td class="border-0 align-middle">
+                          <div class="d-flex">
+                            <div class="mx-3" >
+                             <a href="cartDecrement?userId=<%=userId%>&productId=<%=item.productItem%>"><button style="border: none; background-color: transparent;"><i class="fas fa-minus"></i></button></a> 
+                              
+                            </div>
+                            <strong></strong><%=item.qty%></strong> 
+                            <div class="mx-3">
+                             <a href="cartIncrement?userId=<%=userId%>&productId=<%=item.productItem%>"><button style="border: none; background-color: transparent;"><i class="fas fa-plus"></i></button></a> 
+                            </div>
+                          </div>
+                          
+                         
+                        </td>
+                        <td class="border-0 align-middle"><a href="cartRemove?userId=<%=userId%>&productId=<%=item.productItem%>" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                      </tr>
+                    <%})%>
+                    </tbody>
+                  </table>
+                  <%}%>
+                </div>
+                <!-- End -->
+              </div>
+            </div>
+      
+            <div class="row py-5 p-4 bg-white rounded shadow-sm">
+              <div class="col-lg-6">
+                <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Coupon code</div>
+                <div class="p-4">
+                  <p class="font-italic mb-4">If you have a coupon code, please enter it in the box below</p>
+                  <div class="input-group mb-4 border rounded-pill p-2">
+                    <input type="text" placeholder="Apply coupon" aria-describedby="button-addon3" class="form-control border-0">
+                    <div class="input-group-append border-0">
+                      <button id="button-addon3" type="button" class="btn btn-dark px-4 rounded-pill"><i class="fa fa-gift mr-2"></i>Apply coupon</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Instructions for seller</div>
+                <div class="p-4">
+                  <p class="font-italic mb-4">If you have some information for the seller you can leave them in the box below</p>
+                  <textarea name="" cols="30" rows="2" class="form-control"></textarea>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
+                <div class="p-4">
+                  <p class="font-italic mb-4">Shipping and additional costs are calculated based on values you have entered.</p>
+                  <ul class="list-unstyled mb-4">
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>$390.00</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>$10.00</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>$0.00</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                      <h5 class="font-weight-bold">$400.00</h5>
+                    </li>
+                  </ul><a href="checkout" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+                </div>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+</section>
+    <%- include('../layouts/user-footer')%>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>

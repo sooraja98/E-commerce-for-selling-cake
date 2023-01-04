@@ -1,0 +1,36 @@
+<%- include('../layouts/admin-header')%>
+  <div class="container">
+
+    <div class="datatable">
+      <% if(customer !=null) { %>
+        <table class="table table-bordered fw-light mt-5" style="width: 100%">
+          <tr class="bg-dark text-light">
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Access</th>
+            <th>Action</th>
+          </tr>
+          <% customer.forEach(function(item){ %>
+            <tr class="">
+              <td>
+                <%= item.name %>
+              </td>
+              <td>
+                <%= item.email %>
+              </td>
+              <td>
+                <%= item.mobile %>
+              </td>
+              <td class="text-center">
+                <%= item.verified %>
+              </td>
+              <td scope="'col"><a href="users/changeAccess?id=<%=item._id%>" class="btn btn-success">Validity</a></td>
+            </tr>
+            <% }) %>
+        </table>
+        <% } %>
+    </div>
+  </div>
+
+  <%- include('../layouts/admin-footer')%>

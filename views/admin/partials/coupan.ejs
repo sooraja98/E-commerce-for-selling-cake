@@ -1,0 +1,16 @@
+<%- include('../layouts/admin-header')%>
+    <section>
+        <div class="container">
+            <form action="" method="post">
+                <label for="">Coupan name</label>
+                <input type="text" class="form-control" name="name">
+                <label for="">OFFER</label>
+                <input type="number" class="form-control" name="offer">
+                <label for="">Startig date</label><br>
+                <input type="date" id="start" name="startdate" value="2018-07-22" min="2022-12-20" max="2030-12-31">
+                <br><br><label for="">Ending date</label><br>
+                <input type="date" id="start" name="enddate" value="2018-10-22" min="2022-12-20" max="2030-12-31">
+                <input type="submit" value="submit" class="form-control btn btn-success">
+        </div>
+    </section>
+    <%- include('../layouts/admin-footer')%>

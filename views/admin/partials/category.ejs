@@ -1,0 +1,48 @@
+<%- include('../layouts/admin-header')%>
+
+    <div class="container">
+        <div>
+            <a href="add-category"><button class="btn btn-success mt-3  " style="width: auto; float: right;">Add
+                    Category</button></a>
+        </div>
+        <section>
+            <div class="text-center mt-4">
+                <h1>Category Management</h1>
+            </div>
+        </section>
+        <section class="mt-2 ">
+
+                <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Category name</th>
+                            <th scope="col">image</th>
+                            <th scope="col">Listing</th>
+                            <th scope="col">action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categoryData.forEach((item)=>{ %>
+                     
+                            <tr>
+                                <td>
+                                    <%= item.name %>
+                                  </td>
+                                  <td><img src="/category-image/<%=item.image%>" alt=""style="height: 100px;"
+                                    width="100px"></td>
+                                        <td scope="col"><%=item.list%></td>
+                                    <td scope='col'><a href="changelistcategory?id=<%=item._id%>" class="btn btn-success">change-listing</a></td>
+                            </tr>
+                                <%})%>
+                    </tbody>
+                
+                </table>
+
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('../layouts/admin-footer')%>

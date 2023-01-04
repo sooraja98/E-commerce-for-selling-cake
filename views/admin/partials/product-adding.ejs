@@ -1,0 +1,52 @@
+<%- include('../layouts/admin-header')%>
+
+    <div class="container">
+        <div>
+            <a href="product"><button class="btn btn-success mt-3  " style="width: auto; float: right;">Add
+                    product</button></a>
+        </div>
+        <section>
+            <div class="text-center mt-4">
+                <h1>Product Management</h1>
+            </div>
+        </section>
+        <section class="mt-2 ">
+                <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
+                    <% if(products!=null)%>
+                    <thead>
+                        <tr>
+                            <th scope="col">Product name</th>
+                            <th scope="col">product Category</th>
+                            <th scope="col">Product description</th>
+                            <th scope="col">Product price</th>  
+                            <th scope="col">image</th>
+                            <th scope="col">Listing</th>
+                            <th scope="col">action</th>
+
+                        </tr>
+                        <% products.forEach((item)=>{%>
+                        <tr>
+                            <td><%=item.name%></td>
+                            <td><%=item.category%></td>
+                            <td><%=item.description%></td>
+                            <td><%=item.price%></td>
+                            <td><img src="/product-image/<%=item.image%>" alt="" style="height: 100px;"
+                                width="100px"></td>
+                                <td scope="col"><%=item.list%></td>
+                                <td scope='col'><a href="changelist?id=<%=item._id%>" class="btn btn-success">change-listing</a></td>
+                        </tr>
+                       <% })%>
+
+                    </thead>
+                    <tbody>    
+
+                    </tbody>
+                </table>
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('../layouts/admin-footer')%>

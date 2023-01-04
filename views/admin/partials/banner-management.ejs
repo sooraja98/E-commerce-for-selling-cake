@@ -1,0 +1,47 @@
+<%- include('../layouts/admin-header')%>
+
+    <div class="container">
+        <div>
+            <a href="banner"><button class="btn btn-success mt-3  " style="width: auto; float: right;">Add
+                    banners</button></a>
+        </div>
+        <section>
+            <div class="text-center mt-4">
+                <h1>Banner Management</h1>
+            </div>
+        </section>
+        <section class="mt-2 ">
+            <% if(bannerImage!=null){%>
+                <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
+                    <thead>
+
+                        <tr>
+                            <th scope="col">Banner name</th>
+                            <th scope="col">image</th>
+                            <th scope="col">Listing</th>
+                            <th scope="col">action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bannerImage.forEach((item)=>{%>
+                            <tr>
+                                <td><%=item.name%></td>
+                                <td><img src="/banner-image/<%=item.image%>" alt=""style="height: 100px;"
+                                    width="100px"></td>
+                                    <td scope="col"><%=item.list%></td>
+                                <td scope='col'><a href="changelistbanner?id=<%=item._id%>" class="btn btn-success">change-listing</a></td>
+                            </tr>
+                        <%})%>
+
+                    </tbody>
+                
+                </table>
+                <%}%>
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('../layouts/admin-footer')%>

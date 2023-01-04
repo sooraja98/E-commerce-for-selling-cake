@@ -1,0 +1,58 @@
+<%- include('../layouts/admin-header')%>
+
+    <div class="container">
+      
+        <section>
+            <div class="text-center mt-4">
+                <h1>Order Management</h1>
+            </div>
+        </section>
+        <section class="mt-2 ">
+                <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
+           
+                    <thead>
+                        <tr>
+                            <th scope="col">Product name</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>  
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Addrress</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">action</th>
+
+                        </tr>
+                        <tr>
+                            <td scope="col">Gem cake</td>
+                            <td scope="col"><img src="../product-image/1672056292900-aaaaaa.webp" alt="" style="height: 100px;"
+                                width="100px"s></td>
+                            <td scope="col">1</td>
+                            <td scope="col">2000</td>  
+                            <td scope="col">2022-12-21T00:00:00.000+00:00</td>
+                            <td scope="col">
+                                name:"sooraj a"<br>
+                                addressline1:"arakkantavita vellikulagara(town) onchiyam(village) kozhikode(district) <br>
+                                district:"calicut"<br>
+                                state:"Kerala"<br>
+                                country:"India"<br>
+                                pin:673501 <br>
+                                mobile:919544213885</td>
+                            <td scope="col">Pending</td>
+                            <td scope='col'><a href="" class="btn btn-success">Status change</a></td>
+
+                        </tr>
+                       
+
+                    </thead>
+                    <tbody>    
+
+                    </tbody>
+                </table>
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('../layouts/admin-footer')%>

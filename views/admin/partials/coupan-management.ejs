@@ -1,0 +1,46 @@
+<%- include('../layouts/admin-header')%>
+
+    <div class="container">
+        <div>
+            <a href="coupan"><button class="btn btn-success mt-3  " style="width: auto; float: right;">Add
+                    coupan</button></a>
+        </div>
+        <section>
+            <div class="text-center mt-4">
+                <h1>Coupan Management</h1>
+            </div>
+        </section>
+        <section class="mt-2 ">
+            <% if(coupan!=null){%>
+                <table id="example" class="table mt-5 table-hover table-light" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Coupan name</th>
+                            <th scope="col">Offer</th>
+                            <th scope="col">Starting Date</th>
+                            <th scope="col">Ending Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <% coupan.forEach((item)=>{%>
+                            <tr>
+                                <td scope="col"><%=item.name%></td>
+                                <td scope="col"><%=item.offer/25%>%</td>
+                                <td scope="col"><%=item.startdate%></td>
+                                <td scope="col"><%=item.enddate%></td>
+                                <td scope="col"><%=item.status%></td>
+                                <td scope="'col"><a href="coupanvalidity?id=<%=item._id%>" class="btn btn-success">Validity</a></td>
+                            </tr>
+                        <%})%>
+                    </tbody>
+                </table>
+                <%}%>
+        </section>
+    </div>
+
+
+
+
+
+    <%- include('../layouts/admin-footer')%>

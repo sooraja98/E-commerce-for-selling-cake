@@ -1,0 +1,43 @@
+<%- include('../layouts/user-nav')%>
+    <section>
+        <% if(category){%>
+            <div class="container mt-5">
+                    <div class="row">
+                        <% category.forEach((item)=>{%>
+                        <div class="col">
+                            <div class="card mt-3" style="width: 18rem;">
+                                <img src="product-image/<%=item.image%>" class="card-img-top" alt="..." style="height: 200px; width: 100%;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%=item.name%>
+                                    </h5>
+                                    <p class="card-text">
+                                        <%=item.description%>
+                                    </p>
+                                    <p class="card-text">
+                                        RS:<%=item.price%>
+                                    </p>
+                                    <% if(usersession){%>
+                                    <a href="addToCart?productId=<%=item._id%>&userId=<%=userId%>"><button class="cart-button">
+                                        <span class="add-to-cart">Add to cart</span>
+                                        <span class="added">Added</span>
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <i class="fas fa-box"></i>
+                                    </button></a>
+                                    <%} else {%>
+                                            <a href="user-login"><button class="btn btn-primary">Log In To Buy</button></a>
+                                            <%}%>
+                                </div>
+                            </div>
+                        </div>
+                    <%})%>
+
+                    </div>
+            </div>
+            <%}%>
+
+    </section>
+
+
+
+    <%- include('../layouts/user-footer')%>
