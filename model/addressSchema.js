@@ -1,30 +1,26 @@
 const mongoose = require("mongoose");
-const Product = require("./productSchema");
 const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
-  name: {
+const addressSchema = new Schema({
+  user_id: {
     type: String,
     required: true,
   },
-  email: {
+  address: {
     type: String,
     required: true,
   },
-  mobile: {
+  state: {
     type: String,
     required: true,
   },
-  password: {
+  city: {
     type: String,
     required: true,
   },
-  verified: {
-    type: Boolean,
-    default: true,
+  pincode: {
+    type: Number,
+    required: true,
   },
-
 });
-
-var User = mongoose.model("user", userSchema);
-module.exports = User;
+const Address = mongoose.model("address", addressSchema);
+module.exports = Address;

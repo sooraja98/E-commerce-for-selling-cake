@@ -12,26 +12,113 @@
 
 <body>
     <%- include('../layouts/user-profile-navbar')%>
+        <section style="background-color: #eee;">
 
-        <section>
-            <div class="container">
-                <div class="row mt-5">
-                    <div class="col-md-12">
-                        <h2 class="text-center">Personal Information</h2>
-                        <form action="/changeProfileData" method="post"> 
-                            <label for="">Name</label>
-                            <input type="text" class="form-control" name="name" value="<%=user.name%>"><br>
-                            <label for="">Email</label>
-                            <input type="text" class="form-control" name="email" value="<%=user.email%>"><br>
-                            <label for="">Contact Number</label>
-                            <input type="text" class="form-control" name="number" value="<%=user.mobile%>"><br>
-                             <input type="submit" value="Update personal inforamtion" class="form-control-plaintext "></a>
-                        </form>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                            <h5 class="my-3">
+                                <%=user.name%>
+                            </h5>
+                            <h5 class="my-3">
+                                <%=user.email%>
+                            </h5>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">
+                                        <%=user.name%>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">
+                                        <%=user.email%>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Phone</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">
+                                        <%=user.mobile%>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Mobile</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">----------------</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Address</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <% address.forEach((add)=>{%>
+
+                                        <p class="text-muted mb-0">
+                                            <%= add.address %><br />
+                                                <%= add.state %><br />
+                                                    <%= add.city %><br />
+                                                        <%= add.pincode %>
+                                                            <hr>
+                                        </p>
+                                        <%})%>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-3">
+                                    <a href="/add-address"><button type="button" class="btn btn-dark btn-block "
+                                            style="width: auto;" data-mdb-ripple-color="dark">
+                                            Add Address
+                                        </button></a>
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <a href="/changeProfile"><button type="button" class="btn btn-dark btn-block "
+                                            style="width: auto;" data-mdb-ripple-color="dark">
+                                            change profile
+                                        </button></a>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             </div>
         </section>
-        
+
 
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -9,7 +9,7 @@ mongoose.set('strictQuery', false)
 const session=require('express-session')
 var adminRouter = require('./routes/admin');
 var userRouter = require('./routes/user');
-
+var paypal = require('paypal-rest-sdk')
 var app = express();
 
 // view engine setup
@@ -26,6 +26,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }))
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'AYdobh3BVGoRK3lEjTRSfj8Rle8rkCNarLclaQBEDQ_wzjISOcIBmec5Zby1CeBCrA5gRr6wPe98He4R',
+  'client_secret': 'EB7VaKf8Lr_-J1s6nhnM_Hb1zlwwbcPYYnm9IoXYo44gcOMX44vsGAle65tDu_2v5yerfrq8m_pJr1R6'
+});
 
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
