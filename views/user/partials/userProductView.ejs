@@ -2,11 +2,12 @@
     <section>
         <% if(category){%>
             <div class="container mt-5">
-                    <div class="row">
-                        <% category.forEach((item)=>{%>
+                <div class="row">
+                    <% category.forEach((item)=>{%>
                         <div class="col-lg-4">
                             <div class="card mt-3" style="width: 20rem;">
-                                <img src="product-image/<%=item.image%>" class="card-img-top" alt="..." style="height: 200px; width: 100%;">
+                                <img src="product-image/<%=item.image%>" class="card-img-top" alt="..."
+                                    style="height: 200px; width: 100%;">
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         <%=item.name%>
@@ -18,22 +19,28 @@
                                         RS:<%=item.price%>
                                     </p>
                                     <% if(usersession){%>
-                                    <a href="addToCart?productId=<%=item._id%>&userId=<%=userId%>"><button class="cart-button">
-                                        <span class="add-to-cart">Add to cart</span>
-                                        <span class="added">Added</span>
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <i class="fas fa-box"></i>
-                                    </button></a>
-                                    <a href="clcwishlist?productId=<%=item._id%>&userId=<%=userId%>"><i class="bi bi-heart " style="float: right; color: red; "></i></a>
-                                    <%} else {%>
-                                            <a href="user-login"><button class="btn btn-primary">Log In To Buy</button></a>
+                                        <a href="addToCart?productId=<%=item._id%>&userId=<%=userId%>"><button
+                                                class="cart-button">
+                                                <span class="add-to-cart">Add to cart</span>
+                                                <span class="added">Added</span>
+                                                <i class="fas fa-shopping-cart"></i>
+                                                <i class="fas fa-box"></i>
+                                            </button></a>
+
+                                        <a href="addwishlist?productId=<%=item._id%>&userId=<%=userId%>"><i
+                                                class="bi bi-heart " style="float: right; color: red; "></i></a>
+
+
+                                        <%} else {%>
+                                            <a href="user-login"><button class="btn btn-primary">Log
+                                                    In To Buy</button></a>
                                             <%}%>
                                 </div>
                             </div>
                         </div>
-                    <%})%>
+                        <%})%>
 
-                    </div>
+                </div>
             </div>
             <%}%>
 

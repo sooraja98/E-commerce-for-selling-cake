@@ -5,11 +5,11 @@ let wishSchema=new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref : 'user'
     },
-    wishItem : [{
-        productId:{
+    productId : [{
+        
             type:mongoose.Types.ObjectId,
             ref:'product'
-        },
+      
     }],
 })
 const Wish = mongoose.model("wish", wishSchema);

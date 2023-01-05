@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <%- include('../layouts/user-nav')%>
+    <%- include('../layouts/user-profile-navbar')%>
 
 
         <section>
@@ -31,28 +31,40 @@
                                             <th width="10%"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td width="45%">
-                                                <div class="display-flex align-center">
-                                                    <div class="img-product">
-                                                        <img src="https://www.91-img.com/pictures/laptops/asus/asus-x552cl-sx019d-core-i3-3rd-gen-4-gb-500-gb-dos-1-gb-61721-large-1.jpg"
-                                                            alt="" class="mCS_img_loaded">
-                                                    </div>
-                                                    <div class="name-product">
-                                                        Apple iPad Mini
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td width="15%" class="price">$110.00</td>
+                                    <% wish.productId.forEach((item)=>{%>
 
-                                            <td width="15%"><button class="round-black-btn small-btn">Add to
-                                                    Cart</button>
-                                            </td>
-                                            <td width="10%" class="text-center"><a href="#" class="trash-icon"><i
-                                                        class="far fa-trash-alt"></i></a></td>
-                                        </tr>
-                                    </tbody>
+                                        <tbody>
+
+
+                                            <tr>
+                                                <td width="45%">
+                                                    <div class="display-flex align-center">
+                                                        <div class="img-product">
+                                                            <img src="product-image/<%=item.image%>"
+                                                                class="card-img-top" alt="..."
+                                                                style="height: 100px; width: 100%;">
+                                                        </div>
+                                                        <div class="name-product">
+                                                            <%=item.name%>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td width="15%" class="price">
+                                                    <%=item.price%>
+                                                </td>
+
+                                                <td width="15%">
+                                                    <a href="addToCart?productId=<%=item._id%>&userId=<%=userId%>"><button
+                                                            class="round-black-btn small-btn">Add to
+                                                            Cart</button></a>
+                                                </td>
+                                                <td width="10%" class="text-center"><a
+                                                        href="deleteWish?productId=<%=item._id%>&userId=<%=userId%>"
+                                                        class="trash-icon"><i class="far fa-trash-alt"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                        <%})%>
+
                                 </table>
                             </div>
                         </div>

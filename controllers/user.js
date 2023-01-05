@@ -1,6 +1,12 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/schema");
 const nodemailer = require("nodemailer");
+const Product=require('../model/productSchema')
+const Category=require('../model/category')
+const Address=require('../model/addressSchema')
+const Wish=require('../model/wishSchema')
+const mongooes = require("mongoose");
+const Cart= require('../model/cart')
 let user;
 module.exports = {
 
@@ -427,12 +433,13 @@ module.exports = {
   //userproductionview
   userProductView: async (req, res) => {
     const categoryId = req.query.id;
-    console.log(categoryId);
+    const userId=req.session.userId
+    const wish = await Wish.findOne({ userId: userId }).populate("productId");
     const category = await Product.find({ category: categoryId });
     res.render("user/partials/userProductView", {
       usersession: req.session.username,
       userId: req.session.userId,
-      category: category,
+      category: category,wish:wish
     });
   },
 
@@ -563,4 +570,54 @@ module.exports = {
       console.log("error in change profile section" + err);
     }
   },
+
+
+  //wishlist
+  addWishlist:async (req, res) => {
+    const productId = req.query.productId;
+    const userId = req.query.userId;
+    const user = await Wish.findOne({ userId: userId });
+    const productExist = await Wish.findOne(
+      { userId: userId },
+      { productId: productId }
+    );
+    if (user) {
+      await Wish.updateOne(
+        { userId: userId },
+        {
+          $push: {
+            productId: [productId],
+          },
+        }
+      );
+    } else {
+      const wishobj = new Wish({
+        userId: userId,
+        productId: [productId],
+      });
+      await wishobj.save();
+    }
+  
+    res.redirect("wishlist");
+  },
+
+
+//deleteWish
+deleteWish: async (req, res) => {
+  const userId = req.query.userId;
+  const productId = req.query.productId;
+  const remove = await Wish.updateOne(
+    { userId: userId },
+    {
+      $pull: { productId: mongooes.Types.ObjectId(productId) },
+    }
+  );
+  res.redirect("shop");
+},
+
+
+
+
+
+
 };
