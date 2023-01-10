@@ -7,18 +7,18 @@ module.exports={
             const userList=await User.find({});
             console.log(userList)
             res.render("admin/partials/user",{customer:userList})
-    } ,  
-
-    coupenchecker:async(req,res)=>{
-        
     },
+
     adminsession:(req,res,next)=>{
-            req.session.admin=true
-            if(req.session.admin){
-            next()
-            }
+            try{
+                if(req.session.admin){}
         else{
-            res.redirect("/admin/admin-home")
+            res.redirect("admin")
         }
+        next()
+            }
+            catch(err){
+                console.log("error in is admin session"+err);
+           }
     }
 }

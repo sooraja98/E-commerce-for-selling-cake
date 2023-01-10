@@ -112,7 +112,7 @@ router.get("/checkout", userSession.iSLogin, async (req, res) => {
 
 router.get("/addwishlist", userSession.iSLogin,userController.addWishlist)
 
-router.get("/wishlist", userSession.iSLogin, async (req, res) => {
+router.get("/wishlist", userSession.iSLogin,async (req, res) => {
   const userId = req.session.userId;
   const wish = await Wish.findOne({ userId: userId }).populate("productId");
   res.render("user/partials/wishlist", {
@@ -143,7 +143,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
     },
     redirect_urls: {
       return_url: "http://localhost:5000",
-      cancel_url: "http://localhost:5000"
+      cancel_url: "http://localhost:5000/shop"
     },
     transactions: [
       {
@@ -240,6 +240,11 @@ router.get("/generate", (req, res) => {
     });
   res.render("./downloadpage", { path: filepath });
 });
+
+
+router.get("/order",userSession.iSLogin,(req,res)=>{
+  res.render('user/partials/order')
+} );
 
 
 module.exports = router;

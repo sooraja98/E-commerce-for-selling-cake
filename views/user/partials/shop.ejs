@@ -1,60 +1,71 @@
 <%- include('../layouts/user-nav')%>
 
     <section>
-        <% if(category){%>
 
-            <% category.forEach((item)=>{%>
+        <div id="container">
+            <div class="container">
+                <% if(category){%>
 
-                <div id="container">
+                    <% category.forEach((item)=>{%>
 
-                    <div class="product-details">
+                        <div class=" my-4 row p-5 " id="row">
+                            <div class=" col-md-6 ">
+                                <div class="product-details ">
 
-                        <h1>
-                            <%=item.name%>
-                        </h1>
+                                    <h1>
+                                        <%=item.name%>
+                                    </h1>
 
 
+                                    
+                                    <!-- The most important information about the product -->
+                                    <p class="information mt-2">We can also customise your cake if you needed, is so contact
+                                        us
+                                    </p>
+                                    <div class="">
 
-                        <!-- The most important information about the product -->
-                        <p class="information">We can also customise your cake if you needed, is so contact us</p>
-                        <div class="col">
+                                        <!-- Start Button buying -->
+                                        <button class="btn btn-primary">
 
-                            <!-- Start Button buying -->
-                            <button class="btn btn-primary">
+                                            <a href="userProductView?id=<%=item._id%>" style="color: aliceblue;">
+                                                <span class="buy">GO</span></a>
+                                        </button>
 
-                                <a href="userProductView?id=<%=item._id%>" style="color: aliceblue;">
-                                    <span class="buy">GO</span></a>
-                            </button>
+                                    </div>
 
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="product-image ">
+
+                                    <img src="/category-image/<%=item.image%>" alt="image" >
+
+                                    <!-- 	product Information-->
+                                    <div class="info">
+                                        <h2>The Description</h2>
+                                        <ul>
+                                            <li><strong>Weight </strong>1-KG</li>
+                                            <li><strong>Shape</strong>Round</li>
+                                            <li><strong>Meterial</strong>Use high quality meterials</li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
+                        <%})%>
+
+                            <%}%>
+            </div>
+
+            <!--  End product image  -->
 
 
-
-                    <div class="product-image">
-
-                        <img src="/category-image/<%=item.image%>" alt="image">
-
-                        <!-- 	product Information-->
-                        <div class="info">
-                            <h2>The Description</h2>
-                            <ul>
-                                <li><strong>Weight </strong>1-KG</li>
-                                <li><strong>Shape</strong>Round</li>
-                                <li><strong>Meterial</strong>Use high quality meterials</li>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <!--  End product image  -->
-
-
-                </div>
-                <%})%>
-
-                    <%}%>
-
+        </div>
     </section>
     <!--Start Footer-->
     <footer>

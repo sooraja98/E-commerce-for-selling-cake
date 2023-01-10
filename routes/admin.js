@@ -18,14 +18,14 @@ router.get("/", (req, res, next) => {
 let product;
 
 //Admin login
-router.post("/login", adminController.adminsession, (req, res) => {
+router.post("/login",(req, res) => {
   const aemil = "a@gmail.com";
   const apassword = "1";
   const email = req.body.email;
   const password = req.body.password;
-
   if (aemil == email && apassword == password) {
-    res.redirect("/admin/admin-home");
+    req.session.admin=true
+    res.redirect("admin-home");
   } else {
     res.redirect("/");
   }
@@ -35,11 +35,11 @@ router.get("/admin-home", adminController.adminsession, (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  res.redirect("/admin");
   req.session.destroy();
+  res.redirect("/admin");
 });
 
-router.get("/product-adding", async (req, res) => {
+router.get("/product-adding",adminController.adminsession, async (req, res) => {
   let details = await Product.aggregate([
     {
     $lookup:{
@@ -59,21 +59,20 @@ router.get("/product-adding", async (req, res) => {
     }
   }
 ])
-console.log(details)
   res.render("admin/partials/product-adding",{products:details})
   
 });
 
-router.get("/banner-management", async (req, res) => {
+router.get("/banner-management",adminController.adminsession, async (req, res) => {
   const bannerImage = await Banner.find({});
   res.render("admin/partials/banner-management", { bannerImage: bannerImage });
 });
-router.get("/coupan-management", async (req, res) => {
+router.get("/coupan-management",adminController.adminsession, async (req, res) => {
   const coupan = await Coupan.find({});
   res.render("admin/partials/coupan-management", { coupan: coupan });
 });
 
-router.get("/users/changeAccess", async (req, res) => {
+router.get("/users/changeAccess",adminController.adminsession, async (req, res) => {
   let customerID = req.query.id;
   let currentCustomer = await User.findById(customerID);
   let currentAccess = currentCustomer.verified;
@@ -88,14 +87,14 @@ router.get("/users/changeAccess", async (req, res) => {
   });
   res.redirect("/admin/users");
 });
-router.get("/users", adminController.userview);
+router.get("/users",adminController.adminsession, adminController.userview);
 
-router.get("/product", async (req, res) => {
+router.get("/product",adminController.adminsession, async (req, res) => {
   let category = await Category.find({list:true});
   res.render("admin/partials/product", { category: category });
 });
 
-router.post("/product", upload.single("image"), (req, res) => {
+router.post("/product",adminController.adminsession, upload.single("image"), (req, res) => {
   try {
     product = new Product({
       name: req.body.name,
@@ -111,7 +110,7 @@ router.post("/product", upload.single("image"), (req, res) => {
   }
 });
 
-router.get("/changelist", async (req, res) => {
+router.get("/changelist",adminController.adminsession, async (req, res) => {
   const id = req.query.id;
   const product = await Product.findById(id);
   let currentlist = product.list;
@@ -126,11 +125,11 @@ router.get("/changelist", async (req, res) => {
   res.redirect("/admin/product-adding");
 });
 
-router.get("/banner", (req, res) => {
+router.get("/banner",adminController.adminsession, (req, res) => {
   res.render("admin/partials/banner");
 });
 let banner;
-router.post("/banner", uploadBanner.single("image"), (req, res) => {
+router.post("/banner",adminController.adminsession, uploadBanner.single("image"), (req, res) => {
   banner = new Banner({
     name: req.body.name,
     image: req.file.filename,
@@ -139,7 +138,7 @@ router.post("/banner", uploadBanner.single("image"), (req, res) => {
   res.redirect("banner-management");
 });
 
-router.get("/changelistbanner", async (req, res) => {
+router.get("/changelistbanner",adminController.adminsession, async (req, res) => {
   const bannerid = req.query.id;
   const bannerdetails = await Banner.findById(bannerid);
   let bannerlist = bannerdetails.list;
@@ -154,11 +153,11 @@ router.get("/changelistbanner", async (req, res) => {
   res.redirect("/admin/banner-management");
 });
 
-router.get("/coupan", (req, res) => {
+router.get("/coupan",adminController.adminsession, (req, res) => {
   res.render("admin/partials/coupan");
 });
 
-router.post("/coupan", (req, res) => {
+router.post("/coupan",adminController.adminsession, (req, res) => {
   let coupan = new Coupan({
     name: req.body.name,
     offer: req.body.offer,
@@ -169,7 +168,7 @@ router.post("/coupan", (req, res) => {
   res.redirect("coupan-management");
 });
 
-router.get("/coupanvalidity", async (req, res) => {
+router.get("/coupanvalidity",adminController.adminsession, async (req, res) => {
   const coupanid = req.query.id;
   const coupandetails = await Coupan.findById(coupanid);
   let coupanStatus = coupandetails.status;
@@ -183,14 +182,14 @@ router.get("/coupanvalidity", async (req, res) => {
   await Coupan.findByIdAndUpdate(coupanid, { $set: { status: coupanStatus } });
   res.redirect("coupan-management");
 });
-router.get("/category", async (req, res) => {
+router.get("/category",adminController.adminsession, async (req, res) => {
   const categoryData = await Category.find({});
   res.render("admin/partials/category", { categoryData: categoryData });
 });
-router.get("/add-category", (req, res) => {
+router.get("/add-category",adminController.adminsession, (req, res) => {
   res.render("admin/partials/add-category");
 });
-router.post("/add-category", uploadCategory.single("image"), (req, res) => {
+router.post("/add-category",adminController.adminsession, uploadCategory.single("image"), (req, res) => {
   const categoryDetails = new Category({
     name: req.body.name,
     image: req.file.filename,
@@ -199,7 +198,7 @@ router.post("/add-category", uploadCategory.single("image"), (req, res) => {
   res.redirect("category");
 });
 
-router.get("/changelistcategory", async (req, res) => {
+router.get("/changelistcategory",adminController.adminsession, async (req, res) => {
   const categoryid = req.query.id;
   const categoydetails = await Category.findById(categoryid);
   let categoryList = categoydetails.list;
@@ -220,7 +219,7 @@ router.get("/changelistcategory", async (req, res) => {
 
 
 
-router.get("/order-mangements",(req,res)=>{
+router.get("/order-mangements",adminController.adminsession,(req,res)=>{
   res.render("admin/partials/order-mangement")
 })
 
