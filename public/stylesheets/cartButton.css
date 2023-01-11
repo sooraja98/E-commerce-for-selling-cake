@@ -5,7 +5,7 @@
 	height: 60px;
 	border: 0;
 	border-radius: 10px;
-	background-color: #190df5;
+	background-color: #dcc585;
 	outline: none;
 	cursor: pointer;
 	color: #fff;
@@ -13,7 +13,7 @@
 	overflow: hidden;
 }
 .cart-button:hover {
-	background-color: #35269b;
+	background-color: #ee96de;
 }
 .cart-button:active {
 	transform: scale(.9);

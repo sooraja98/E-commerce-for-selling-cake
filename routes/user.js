@@ -102,8 +102,9 @@ router.post(
   userController.changeProfileData
 );
 
-router.get("/checkout", userSession.iSLogin, async (req, res) => {
-  const total = req.query.total;
+router.post("/checkout", userSession.iSLogin, async (req, res) => {
+  const total = req.body.total;
+  console.log(total)
   const userEmail = await User.findById({ _id: req.session.userId });
   const email = userEmail.email;
   const address = await Address.find({ user_id: email });
@@ -136,6 +137,10 @@ router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
 });
 
 router.post("/payment",userSession.iSLogin,(req, res) => {
+  const address=req.body.address
+  var price=parseInt(req.body.total)
+  var price=price*0.012
+  console.log(price);
   const create_payment_json = {
     intent: "sale",
     payer: {
@@ -152,7 +157,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
             {
               name: "Red Sox Hat",
               sku: "001",
-              price: "25.00",
+              price: price,
               currency: "USD",
               quantity: 1,
             },
@@ -160,7 +165,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
         },
         amount: {
           currency: "USD",
-          total: "25.00",
+          total: price
         },
         description: "Hat for the best team ever",
       },
@@ -174,6 +179,13 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
       for (let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
+
+              
+
+
+
+
+
         }
       }
     }
@@ -190,7 +202,7 @@ router.get("/success", (req, res) => {
       {
         amount: {
           currency: "USD",
-          total: "25.00",
+          total: price,
         },
       },
     ],
@@ -212,34 +224,34 @@ router.get("/success", (req, res) => {
 });
 
 
-router.get("/generate", (req, res) => {
-  const html = fs.readFileSync(
-    path.join(__dirname, "./views/template.html"),
-    "utf-8"
-  );
-  const filename = Math.random() + "_doc" + ".pdf";
-  const filepath = "/localhost:1000/docs/" + filename;
-  const details = [
-    { name: "jithin", age: 26 },
-    { name: "alan", age: 21 },
-  ];
+// router.get("/generate", (req, res) => {
+//   const html = fs.readFileSync(
+//     path.join(__dirname, "./views/template.html"),
+//     "utf-8"
+//   );
+//   const filename = Math.random() + "_doc" + ".pdf";
+//   const filepath = "/localhost:1000/docs/" + filename;
+//   const details = [
+//     { name: "jithin", age: 26 },
+//     { name: "alan", age: 21 },
+//   ];
 
-  const document = {
-    html: html,
-    data: { details },
-    path: "./docs/" + filename,
-  };
-  pdf
-    .create(document)
-    .then((resolve) => {
-      console.log(resolve);
-      // res.render('./downloadpage',{path:filepath})
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  res.render("./downloadpage", { path: filepath });
-});
+//   const document = {
+//     html: html,
+//     data: { details },
+//     path: "./docs/" + filename,
+//   };
+//   pdf
+//     .create(document)
+//     .then((resolve) => {
+//       console.log(resolve);
+//       // res.render('./downloadpage',{path:filepath})
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+//   res.render("./downloadpage", { path: filepath });
+// });
 
 
 router.get("/order",userSession.iSLogin,(req,res)=>{

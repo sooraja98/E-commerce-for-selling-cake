@@ -1,16 +1,36 @@
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
 
-const orderSchema=new mongoose.Schema({
-    userId:mongoose.Types.ObjectId,
-    products:[{productId:mongoose.Types.ObjectId,quantity:Number}],
-    couponsApplied:[{coupenId:mongoose.Types.ObjectId}],
-    netAmount:Number,
-    address:{houseName:String, village:String, pin:Number, state:String, country:String},
-    status:{ type:String,default:'processing'},
-    orderDate:String,
-    expectedDeliveryDate:String
-})
+const { Schema } = mongoose;
+const orderSchema = new Schema({
+   
+    userId:{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'User'
+    },
+    product:{},
+    addresses:[{
+        address:String,
+        phone:String,
+        name:String,
+        pincode:String,
+        }],
+    status:{
+        type:String,
+        default:'Placed',
+    },
+    date:{
+        default:Date.now
+    },
+    total:{
+        type:String
+    },
+   
+  
+});
 
-const Order=new mongoose.model('order',newSchema)
 
-module.exports=Order
+
+
+const Order = mongoose.model('order', orderSchema);
+
+module.exports=Order;

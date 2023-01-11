@@ -20,28 +20,33 @@
             <div class="row pt-5">
                 <div class="col-md-12 col-lg-8 mb-4">
                     <div class="card mb-4">
-                        
 
-                        
-                            <div class="card-header py-3">
-                                <h5 class="mb-0">Shipping Address</h5>
-                            </div>
-                            <div class="card-body">
-                                <!-- Text input -->
-                                <div class=" text-dark  border-secondary">
-                                    <div class="p-5">
+
+
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Shipping Address</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Text input -->
+                            <div class=" text-dark  border-secondary">
+                                <div class="p-5">
+                                    <form action="payment" method="post">
                                         <div class="shipadrss col-md-12 ">
                                             <% address.forEach((add)=>{%>
                                                 <div style="border: 1px rgba(99, 94, 94, 0.233) solid"
                                                     class="p-4 d-flex align-content-center align-items-center d9">
-                                                    <input type="radio" value="" name="address" required checked />
+                                                    <input type="radio" name="address" required checked
+                                                        value="<%=add._id%>" />
                                                     <p class="ms-3"><br />
                                                     <p class="text-muted mb-0">
                                                         <%= add.address %><br />
-                                                            <%= add.state %><br />
+                                                            <%= add.phone %><br />
                                                                 <%= add.city %><br />
                                                                     <%= add.pincode %>
                                                                         <hr>
+
+                                                                        <input type="text" name="addressId"
+                                                                            value="<%=add._id%>" >
                                                     </p>
                                                     </p>
                                                 </div>
@@ -53,9 +58,9 @@
                                                             Address</a>
                                                     </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
 
@@ -98,16 +103,17 @@
                                         <strong>Total Amount </strong>
                                     </div>
                                     <span id="total" </span>
-                                        <input type="hidden" name="total" id="final">
+                                        <input type="hidden" name="" id="final">
                                 </li>
                             </ul>
                             <div class="col">
                                 <div class="mt-0">
-                                    <form action="payment" method="post">
-                                        <button type="submit" value="submit"
-                                            class="btn btn-success btn-lg btn-block float-end">
-                                            Pay now
-                                        </button>
+                                    <input type="number" name="total" value="<%=total%>">
+                                    <input type="text" name="address" value="add">
+                                    <button type="submit" value="submit"
+                                        class="btn btn-success btn-lg btn-block float-end">
+                                        Pay now 
+                                    </button>
                                     </form>
                                 </div>
                             </div>
@@ -117,6 +123,7 @@
             </div>
         </div>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>

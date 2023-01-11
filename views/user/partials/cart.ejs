@@ -127,7 +127,11 @@
                         class="text-muted">Total</strong>
                       <h5 class="font-weight-bold"><%=total+89%></h5>
                     </li>
-                  </ul><a href="checkout?total=<%=total+89%>" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+                  </ul>
+                  <form action="checkout" method="post">
+                    <input type="text" name="total"  value="<%=total=total+89%>" hidden>
+                    <button class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</button>
+                  </form>
                 </div>
               </div>
             </div>

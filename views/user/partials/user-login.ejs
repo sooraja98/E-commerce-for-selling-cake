@@ -14,7 +14,6 @@
 
 
     <!--user signup!-->
-
     <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form action="/user-signup" method="post">
@@ -29,9 +28,11 @@
                     <a href="#" class="social">
                         <ion-icon name="logo-linkedin"></ion-icon>
                     </a>
-                    <p class="text-danger"><%= locals.error1 %></p>
+                    <p class="text-danger">
+                        <%= locals.error1 %>
+                    </p>
                 </div>
-                
+
                 <span>or use your email for registration</span>
                 <input type="text" placeholder="Name" name="name" required="true">
                 <input type="email" placeholder="Email" name="email" required="true">
@@ -47,9 +48,11 @@
 
 
 
-          <!--user login!-->
+            <!--user login!-->
             <form action="/user-login" method="post">
-                <p><%= locals.error %></p>
+                <p>
+                    <%= locals.error %>
+                </p>
                 <h1>Sign In</h1>
                 <div class="social-container">
                     <a href="#" class="social">
@@ -86,6 +89,7 @@
     </div>
     <script src="../javascripts/user-login.js"></script>
     <script src="https://unpkg.com/ionicons@4.2.2/dist/ionicons.js"></script>
+
 </body>
 
 </html>

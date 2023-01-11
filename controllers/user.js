@@ -542,7 +542,7 @@ module.exports = {
       address: req.body.address,
       city: req.body.city,
       district: req.body.district,
-      state: req.body.state,
+      phone: req.body.phone,
       pincode: req.body.pincode,
     });
     await addressDetails.save().then((results) => {

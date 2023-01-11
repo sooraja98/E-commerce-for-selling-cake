@@ -9,8 +9,8 @@ const addressSchema = new Schema({
     type: String,
     required: true,
   },
-  state: {
-    type: String,
+  phone: {
+    type: Number,
     required: true,
   },
   city: {
