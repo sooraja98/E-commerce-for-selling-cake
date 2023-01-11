@@ -12,19 +12,27 @@ const Coupan = require("../model/coupan");
 const Category = require("../model/category");
 const uploadCategory = require("../config/multercategory");
 
+var cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: "dvpvoqgia",
+  api_key: "887845154618411",
+  api_secret: "4PN-frHRrPCOsZedU_Y842aHD70",
+  secure: true,
+});
+
 router.get("/", (req, res, next) => {
   res.render("admin/partials/admin-login");
 });
 let product;
 
 //Admin login
-router.post("/login",(req, res) => {
+router.post("/login", (req, res) => {
   const aemil = "a@gmail.com";
   const apassword = "1";
   const email = req.body.email;
   const password = req.body.password;
   if (aemil == email && apassword == password) {
-    req.session.admin=true
+    req.session.admin = true;
     res.redirect("admin-home");
   } else {
     res.redirect("/");
@@ -39,69 +47,98 @@ router.get("/logout", (req, res) => {
   res.redirect("/admin");
 });
 
-router.get("/product-adding",adminController.adminsession, async (req, res) => {
-  let details = await Product.aggregate([
-    {
-    $lookup:{
-      from:"categories",
-      localField:"category",
-      foreignField:"_id",
-      as:"catdata"
-    }},
-    {
-    $project:{
-      name:"$name",
-      category:"$catdata.name",
-      description:"$description",
-      price:"$price",
-      list:"$list",
-      image:"$image"
+router.get(
+  "/product-adding",
+  adminController.adminsession,
+  async (req, res) => {
+    let details = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "catdata",
+        },
+      },
+      {
+        $project: {
+          name: "$name",
+          category: "$catdata.name",
+          description: "$description",
+          price: "$price",
+          list: "$list",
+          image: "$image",
+        },
+      },
+    ]);
+    res.render("admin/partials/product-adding", { products: details });
+  }
+);
+
+router.get(
+  "/banner-management",
+  adminController.adminsession,
+  async (req, res) => {
+    const bannerImage = await Banner.find({});
+    res.render("admin/partials/banner-management", {
+      bannerImage: bannerImage,
+    });
+  }
+);
+router.get(
+  "/coupan-management",
+  adminController.adminsession,
+  async (req, res) => {
+    const coupan = await Coupan.find({});
+    res.render("admin/partials/coupan-management", { coupan: coupan });
+  }
+);
+
+router.get(
+  "/users/changeAccess",
+  adminController.adminsession,
+  async (req, res) => {
+    let customerID = req.query.id;
+    let currentCustomer = await User.findById(customerID);
+    let currentAccess = currentCustomer.verified;
+    if (currentAccess == true) {
+      currentAccess = false;
+    } else if (currentAccess == false) {
+      currentAccess = true;
     }
+    currentAccess = Boolean(currentAccess);
+    await User.findByIdAndUpdate(customerID, {
+      $set: { verified: currentAccess },
+    });
+    res.redirect("/admin/users");
   }
-])
-  res.render("admin/partials/product-adding",{products:details})
-  
-});
+);
+router.get("/users", adminController.adminsession, adminController.userview);
 
-router.get("/banner-management",adminController.adminsession, async (req, res) => {
-  const bannerImage = await Banner.find({});
-  res.render("admin/partials/banner-management", { bannerImage: bannerImage });
-});
-router.get("/coupan-management",adminController.adminsession, async (req, res) => {
-  const coupan = await Coupan.find({});
-  res.render("admin/partials/coupan-management", { coupan: coupan });
-});
-
-router.get("/users/changeAccess",adminController.adminsession, async (req, res) => {
-  let customerID = req.query.id;
-  let currentCustomer = await User.findById(customerID);
-  let currentAccess = currentCustomer.verified;
-  if (currentAccess == true) {
-    currentAccess = false;
-  } else if (currentAccess == false) {
-    currentAccess = true;
-  }
-  currentAccess = Boolean(currentAccess);
-  await User.findByIdAndUpdate(customerID, {
-    $set: { verified: currentAccess },
-  });
-  res.redirect("/admin/users");
-});
-router.get("/users",adminController.adminsession, adminController.userview);
-
-router.get("/product",adminController.adminsession, async (req, res) => {
-  let category = await Category.find({list:true});
+router.get("/product", adminController.adminsession, async (req, res) => {
+  let category = await Category.find({ list: true });
   res.render("admin/partials/product", { category: category });
 });
 
-router.post("/product",adminController.adminsession, upload.single("image"), (req, res) => {
+router.post("/product", adminController.adminsession, async (req, res) => {
+  const file = req.files.image;
+  let imagePath;
+  await cloudinary.uploader.upload(
+    file.tempFilePath,
+    { folder: "Products" },
+    (error, result) => {
+      imagePath = result.secure_url;
+      public_id = result.public_id;
+    }
+  );
+
   try {
     product = new Product({
       name: req.body.name,
       category: req.body.category,
       description: req.body.description,
       price: req.body.price,
-      image: req.file.filename,
+      image: imagePath,
     });
     product.save();
     res.redirect("product-adding");
@@ -110,7 +147,7 @@ router.post("/product",adminController.adminsession, upload.single("image"), (re
   }
 });
 
-router.get("/changelist",adminController.adminsession, async (req, res) => {
+router.get("/changelist", adminController.adminsession, async (req, res) => {
   const id = req.query.id;
   const product = await Product.findById(id);
   let currentlist = product.list;
@@ -125,39 +162,54 @@ router.get("/changelist",adminController.adminsession, async (req, res) => {
   res.redirect("/admin/product-adding");
 });
 
-router.get("/banner",adminController.adminsession, (req, res) => {
+router.get("/banner", adminController.adminsession, (req, res) => {
   res.render("admin/partials/banner");
 });
 let banner;
-router.post("/banner",adminController.adminsession, uploadBanner.single("image"), (req, res) => {
+router.post("/banner", adminController.adminsession, async (req, res) => {
+  const file = req.files.image;
+  let imagePath;
+  await cloudinary.uploader.upload(
+    file.tempFilePath,
+    { folder: "Banner" },
+    (error, result) => {
+      imagePath = result.secure_url;
+      public_id = result.public_id;
+    }
+  );
+
   banner = new Banner({
     name: req.body.name,
-    image: req.file.filename,
+    image: imagePath,
   });
   banner.save();
   res.redirect("banner-management");
 });
 
-router.get("/changelistbanner",adminController.adminsession, async (req, res) => {
-  const bannerid = req.query.id;
-  const bannerdetails = await Banner.findById(bannerid);
-  let bannerlist = bannerdetails.list;
-  if (bannerlist == true) {
-    bannerlist = false;
-    Boolean(bannerlist);
-  } else if (bannerlist == false) {
-    bannerlist = true;
-    Boolean(bannerlist);
+router.get(
+  "/changelistbanner",
+  adminController.adminsession,
+  async (req, res) => {
+    const bannerid = req.query.id;
+    const bannerdetails = await Banner.findById(bannerid);
+    let bannerlist = bannerdetails.list;
+    if (bannerlist == true) {
+      bannerlist = false;
+      Boolean(bannerlist);
+    } else if (bannerlist == false) {
+      bannerlist = true;
+      Boolean(bannerlist);
+    }
+    await Banner.findByIdAndUpdate(bannerid, { $set: { list: bannerlist } });
+    res.redirect("/admin/banner-management");
   }
-  await Banner.findByIdAndUpdate(bannerid, { $set: { list: bannerlist } });
-  res.redirect("/admin/banner-management");
-});
+);
 
-router.get("/coupan",adminController.adminsession, (req, res) => {
+router.get("/coupan", adminController.adminsession, (req, res) => {
   res.render("admin/partials/coupan");
 });
 
-router.post("/coupan",adminController.adminsession, (req, res) => {
+router.post("/coupan", adminController.adminsession, (req, res) => {
   let coupan = new Coupan({
     name: req.body.name,
     offer: req.body.offer,
@@ -168,64 +220,74 @@ router.post("/coupan",adminController.adminsession, (req, res) => {
   res.redirect("coupan-management");
 });
 
-router.get("/coupanvalidity",adminController.adminsession, async (req, res) => {
-  const coupanid = req.query.id;
-  const coupandetails = await Coupan.findById(coupanid);
-  let coupanStatus = coupandetails.status;
-  if (coupanStatus == true) {
-    coupanStatus = false;
-    Boolean(coupanStatus);
-  } else if (coupanStatus == false) {
-    coupanStatus = true;
-    Boolean(coupanStatus);
+router.get(
+  "/coupanvalidity",
+  adminController.adminsession,
+  async (req, res) => {
+    const coupanid = req.query.id;
+    const coupandetails = await Coupan.findById(coupanid);
+    let coupanStatus = coupandetails.status;
+    if (coupanStatus == true) {
+      coupanStatus = false;
+      Boolean(coupanStatus);
+    } else if (coupanStatus == false) {
+      coupanStatus = true;
+      Boolean(coupanStatus);
+    }
+    await Coupan.findByIdAndUpdate(coupanid, {
+      $set: { status: coupanStatus },
+    });
+    res.redirect("coupan-management");
   }
-  await Coupan.findByIdAndUpdate(coupanid, { $set: { status: coupanStatus } });
-  res.redirect("coupan-management");
-});
-router.get("/category",adminController.adminsession, async (req, res) => {
+);
+router.get("/category", adminController.adminsession, async (req, res) => {
   const categoryData = await Category.find({});
   res.render("admin/partials/category", { categoryData: categoryData });
 });
-router.get("/add-category",adminController.adminsession, (req, res) => {
+router.get("/add-category", adminController.adminsession, (req, res) => {
   res.render("admin/partials/add-category");
 });
-router.post("/add-category",adminController.adminsession, uploadCategory.single("image"), (req, res) => {
+router.post("/add-category", adminController.adminsession, async (req, res) => {
+  const file = req.files.image;
+  let imagePath;
+  await cloudinary.uploader.upload(
+    file.tempFilePath,
+    { folder: "Category" },
+    (error, result) => {
+      imagePath = result.secure_url;
+    }
+  );
   const categoryDetails = new Category({
     name: req.body.name,
-    image: req.file.filename,
+    image: imagePath,
   });
   categoryDetails.save();
   res.redirect("category");
 });
 
-router.get("/changelistcategory",adminController.adminsession, async (req, res) => {
-  const categoryid = req.query.id;
-  const categoydetails = await Category.findById(categoryid);
-  let categoryList = categoydetails.list;
-  if (categoryList == true) {
-    categoryList = false;
-    Boolean(categoryList);
-  } else if (categoryList == false) {
-    categoryList = true;
-    Boolean(categoryList);
+router.get(
+  "/changelistcategory",
+  adminController.adminsession,
+  async (req, res) => {
+    const categoryid = req.query.id;
+    const categoydetails = await Category.findById(categoryid);
+    let categoryList = categoydetails.list;
+    if (categoryList == true) {
+      categoryList = false;
+      Boolean(categoryList);
+    } else if (categoryList == false) {
+      categoryList = true;
+      Boolean(categoryList);
+    }
+    await Category.findByIdAndUpdate(categoryid, {
+      $set: { list: categoryList },
+    });
+    res.redirect("category");
   }
-  await Category.findByIdAndUpdate(categoryid, {
-    $set: { list: categoryList },
-  });
-  res.redirect("category");
-}); 
+);
 
-
-
-
-
-router.get("/order-mangements",adminController.adminsession,(req,res)=>{
-  res.render("admin/partials/order-mangement")
-})
-
-
-
-
-
+router.get("/order-mangements", adminController.adminsession, (req, res) => {
+  res.render("admin/partials/order-mangement");
+});
 
 module.exports = router;

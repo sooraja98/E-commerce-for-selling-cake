@@ -11,15 +11,17 @@
                         <% if(category!=null){ %>
                             <label for="Category">category</label>
                             <select id="" name="category">
-                            <% category.forEach((item)=>{%>
-                              
-                              <option value="<%=item._id%>"><%=item.name%></option>
-                             
-                            <%})%>
+                                <% category.forEach((item)=>{%>
+
+                                    <option value="<%=item._id%>">
+                                        <%=item.name%>
+                                    </option>
+
+                                    <%})%>
 
                             </select>
                             <%}%>
-                            <br>
+                                <br>
                                 <label for="">description</label>
                                 <input type="text" class="form-control" name="description">
 

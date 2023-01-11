@@ -139,7 +139,7 @@ router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
 router.post("/payment",userSession.iSLogin,(req, res) => {
   const address=req.body.address
   var price=parseInt(req.body.total)
-  var price=price*0.012
+  var price=price
   console.log(price);
   const create_payment_json = {
     intent: "sale",
@@ -180,7 +180,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
         if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
 
-              
+
 
 
 

@@ -25,16 +25,20 @@
                     <tbody>
                         <% bannerImage.forEach((item)=>{%>
                             <tr>
-                                <td><%=item.name%></td>
-                                <td><img src="/banner-image/<%=item.image%>" alt=""style="height: 100px;"
-                                    width="100px"></td>
-                                    <td scope="col"><%=item.list%></td>
-                                <td scope='col'><a href="changelistbanner?id=<%=item._id%>" class="btn btn-success">change-listing</a></td>
+                                <td>
+                                    <%=item.name%>
+                                </td>
+                                <td><img src="<%=item.image%>" alt="" style="height: 100px;" width="100px"></td>
+                                <td scope="col">
+                                    <%=item.list%>
+                                </td>
+                                <td scope='col'><a href="changelistbanner?id=<%=item._id%>"
+                                        class="btn btn-success">change-listing</a></td>
                             </tr>
-                        <%})%>
+                            <%})%>
 
                     </tbody>
-                
+
                 </table>
                 <%}%>
         </section>

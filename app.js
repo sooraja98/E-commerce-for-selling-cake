@@ -19,6 +19,12 @@ paypal.configure({
 });
 
 var app = express();
+const fileupload = require("express-fileupload");
+app.use(
+  fileupload({
+    useTempFiles: true,
+  })
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
