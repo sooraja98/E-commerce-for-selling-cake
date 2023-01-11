@@ -15,10 +15,10 @@ const mongooes = require("mongoose");
 const user = require("../controllers/user");
 const { iSLogin } = require("../middileware/userLogin");
 const session = require("express-session");
-const { login } = require("../controllers/user");
+const { login, userProductView } = require("../controllers/user");
 const Address = require("../model/addressSchema");
 const Wish = require("../model/wishSchema");
-const userCheck=require('../controllers/userCheck')
+const userCheck = require("../controllers/userCheck");
 var paypal = require("paypal-rest-sdk");
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -27,7 +27,6 @@ paypal.configure({
   client_secret:
     "ECe3UMFpNHcJOcqPPZBj-18EZQTJyt5BrGjg10us99wNueLJW1NGw3lYEEKYJ8GCWICwU1XgFkvmANQ6",
 });
-
 
 /* GET home page. */
 router.get("/", userController.home);
@@ -67,7 +66,7 @@ router.post(
 
 router.get("/user-logout", userController.logout);
 
-router.get("/usercategory",userController.usercategory);
+router.get("/usercategory", userController.usercategory);
 
 router.get("/ToCart", userSession.iSLogin, userController.ToCart);
 
@@ -79,7 +78,12 @@ router.post("/resendSignup-otp", userController.resendSignupOtp);
 
 router.get("/shop", userController.shop);
 
-router.get("/profile", userSession.iSLogin,userCheck.iSValid,userController.profile);
+router.get(
+  "/profile",
+  userSession.iSLogin,
+  userCheck.iSValid,
+  userController.profile
+);
 
 router.get("/userProductView", userController.userProductView);
 
@@ -104,16 +108,16 @@ router.post(
 
 router.post("/checkout", userSession.iSLogin, async (req, res) => {
   const total = req.body.total;
-  console.log(total)
+  console.log(total);
   const userEmail = await User.findById({ _id: req.session.userId });
   const email = userEmail.email;
   const address = await Address.find({ user_id: email });
   res.render("user/partials/checkout", { total: total, address: address });
 });
 
-router.get("/addwishlist", userSession.iSLogin,userController.addWishlist)
+router.get("/addwishlist", userSession.iSLogin, userController.addWishlist);
 
-router.get("/wishlist", userSession.iSLogin,async (req, res) => {
+router.get("/wishlist", userSession.iSLogin, async (req, res) => {
   const userId = req.session.userId;
   const wish = await Wish.findOne({ userId: userId }).populate("productId");
   res.render("user/partials/wishlist", {
@@ -122,7 +126,6 @@ router.get("/wishlist", userSession.iSLogin,async (req, res) => {
     wish: wish,
   });
 });
-
 
 router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
   const userId = req.query.userId;
@@ -136,10 +139,10 @@ router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
   res.redirect("shop");
 });
 
-router.post("/payment",userSession.iSLogin,(req, res) => {
-  const address=req.body.address
-  var price=parseInt(req.body.total)
-  var price=price
+router.post("/payment", userSession.iSLogin, (req, res) => {
+  const address = req.body.address;
+  var price = parseInt(req.body.total);
+  var price = price;
   console.log(price);
   const create_payment_json = {
     intent: "sale",
@@ -148,7 +151,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
     },
     redirect_urls: {
       return_url: "http://localhost:5000",
-      cancel_url: "http://localhost:5000/shop"
+      cancel_url: "http://localhost:5000/shop",
     },
     transactions: [
       {
@@ -165,7 +168,7 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
         },
         amount: {
           currency: "USD",
-          total: price
+          total: price,
         },
         description: "Hat for the best team ever",
       },
@@ -179,13 +182,6 @@ router.post("/payment",userSession.iSLogin,(req, res) => {
       for (let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
-
-
-
-
-
-
-
         }
       }
     }
@@ -223,40 +219,36 @@ router.get("/success", (req, res) => {
   );
 });
 
+router.get("/more", async (req, res) => {
+  try {
+    const product = await Product.find().sort({ price: -1 });
+    res.render("user/partials/userProductView", {
+      usersession: req.session.username,
+      userId: req.session.userId,
+      category: product,
+    });
+  } catch (error) {
+    console.log("sort error" + error);
+  }
+});
+router.get("/less", async (req, res) => {
+  try {
+    const product = await Product.find().sort({ price: 1 });
+    res.render("user/partials/userProductView", {
+      usersession: req.session.username,
+      userId: req.session.userId,
+      category: product,
+    });
+  } catch (error) {
+    console.log("sort error" + error);
+  }
+});
 
-// router.get("/generate", (req, res) => {
-//   const html = fs.readFileSync(
-//     path.join(__dirname, "./views/template.html"),
-//     "utf-8"
-//   );
-//   const filename = Math.random() + "_doc" + ".pdf";
-//   const filepath = "/localhost:1000/docs/" + filename;
-//   const details = [
-//     { name: "jithin", age: 26 },
-//     { name: "alan", age: 21 },
-//   ];
-
-//   const document = {
-//     html: html,
-//     data: { details },
-//     path: "./docs/" + filename,
-//   };
-//   pdf
-//     .create(document)
-//     .then((resolve) => {
-//       console.log(resolve);
-//       // res.render('./downloadpage',{path:filepath})
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-//   res.render("./downloadpage", { path: filepath });
-// });
-
-
-router.get("/order",userSession.iSLogin,(req,res)=>{
-  res.render('user/partials/order')
-} );
-
+router.get("/order", userSession.iSLogin, (req, res) => {
+  res.render("user/partials/order", {
+    usersession: req.session.username,
+    userId: req.session.userId,
+  });
+});
 
 module.exports = router;

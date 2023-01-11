@@ -2,8 +2,8 @@
     <div class="dropdown ml-5 mt-3">
         <button class="dropbtn">Sort</button>
         <div class="dropdown-content">
-            <a href="test?sort=low">Price low to high</a>
-            <a href="test?sort=high">Price high to low</a>
+            <a href="more">Price low to high</a>
+            <a href="less">Price high to low</a>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
                     <% category.forEach((item)=>{%>
                         <div class="col-lg-4">
                             <div class="card mt-3" style="width: 20rem;">
-                                <img src="product-image/<%=item.image%>" class="card-img-top" alt="..."
+                                <img src="<%=item.image%>" class="card-img-top" alt="..."
                                     style="height: 200px; width: 100%;">
                                 <div class="card-body">
                                     <h5 class="card-title">
