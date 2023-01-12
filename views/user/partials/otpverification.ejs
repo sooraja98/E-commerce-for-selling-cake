@@ -6,27 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">\
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <style>
-        body {
-            background: #007bff;
-            background: linear-gradient(to right, #0062E6, #33AEFF);
-        }
-
-        .btn-login {
-            font-size: 0.9rem;
-            letter-spacing: 0.05rem;
-            padding: 0.75rem 1rem;
-        }
-
-        .btn-google {
-            color: white !important;
-            background-color: #ea4335;
-        }
-
-        .btn-facebook {
-            color: white !important;
-            background-color: #3b5998;
+        .form-gap {
+            padding-top: 70px;
         }
     </style>
     <title>otp</title>
@@ -35,67 +19,83 @@
 <body>
 
     <body>
+        <div class="form-gap"></div>
         <div class="container">
             <div class="row">
-                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-                    <div class="card border-0 shadow rounded-3 my-5">
-                        <div class="card-body p-4 p-sm-5">
-                            <h5 class="card-title text-center mb-5 fw-light fs-5">ENTER THE OTP TO SIGNUP</h5>
-                            <p><%= locals.otp %></p>
-                            <form  action="" method="post">
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="floatingInput"
-                                        placeholder="*****" name="otp"> 
-                                    <label for="floatingInput">OTP</label>
-                                </div>
-                                <div class="d-grid">
-                                    <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign
-                                        in</button>
-                                </div>
-                                <form action="/resendSignup-otp" class="mt-5" method="post">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="text-center">
+                                <h3><i class="fa fa-lock fa-4x"></i></h3>
+                                <h2 class="text-center">Forgot Password?</h2>
+                                <p>Enter the otp here</p>
+                                <div class="panel-body">
 
-                                    <button class="btn btn-danger ms-2" id="resend-button">Resend OTP</button>
-                                    <!-- <span id="timer" class="ms-3">15</span> -->
-                                </form>
-                            </form>
+                                    <form id="register-form" action="" role="form" autocomplete="off" class="form"
+                                        method="post">
+                                        <p>
+                                            <%= locals.otp%>
+                                        </p>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i
+                                                        class="glyphicon glyphicon-envelope color-blue"></i></span>
+                                                <input id="email" name="otp" placeholder="*********"
+                                                    class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="recover-submit" class="btn btn-lg btn-primary btn-block"
+                                                value="Sent Otp" type="submit">
+                                        </div>
+
+                                        <form action="/resend-otp" class="mt-5" method="post">
+
+                                            <button class="btn btn-danger ms-2" id="resend-button">Resend OTP</button>
+                                            <!-- <span id="timer" class="ms-3">15</span> -->
+                                        </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </body>
-</body>
-<script>
+    <script>
 
-    function disable() {
+        function disable() {
 
-        const resend_button = document.getElementById("resend-button")
-        resend_button.disabled = true;
+            const resend_button = document.getElementById("resend-button")
+            resend_button.disabled = true;
 
-    }
-    disable()
-
-    setTimeout(function () {
-        const resend_button = document.getElementById("resend-button")
-        resend_button.disabled = false;
-    }, 15000)
-
-    let count = 15
-    const timerDiv = document.getElementById('resend-button');
-
-    const timer = setInterval(function () {
-        count--;
-        if (count > 0) {
-            timerDiv.textContent = 'Resend OTP in ' + count + 's';
         }
-        else {
-            timerDiv.textContent = 'Resend OTP'
-        }
+        disable()
 
-    }, 1000);
+        setTimeout(function () {
+            const resend_button = document.getElementById("resend-button")
+            resend_button.disabled = false;
+        }, 15000)
 
-    setTimeout(function () {
-        clearInterval(timer);
-    }, 15000);
-</script>
+        let count = 15
+        const timerDiv = document.getElementById('resend-button');
+
+        const timer = setInterval(function () {
+            count--;
+            if (count > 0) {
+                timerDiv.textContent = 'Resend OTP in ' + count + 's';
+            }
+            else {
+                timerDiv.textContent = 'Resend OTP'
+            }
+
+        }, 1000);
+
+        setTimeout(function () {
+            clearInterval(timer);
+        }, 15000);
+    </script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 </html>

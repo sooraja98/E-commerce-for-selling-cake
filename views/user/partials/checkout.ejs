@@ -46,7 +46,7 @@
                                                                         <hr>
 
                                                                         <input type="text" name="addressId"
-                                                                            value="<%=add._id%>" >
+                                                                            value="<%=add._id%>">
                                                     </p>
                                                     </p>
                                                 </div>
@@ -77,6 +77,9 @@
                                         <label for="coupon"><strong>Enter your coupon code here</strong></label>
                                         <div class="input-group form-outline mt-2 mb-2">
                                             <input type="text" class="form-control" placeholder="Enter here">
+                                            <button id="button-addon3" type="button"
+                                                class="btn btn-dark px-4 rounded-pill"><i
+                                                    class="fa fa-gift mr-2"></i>Apply coupon</button>
                                         </div>
                                     </div>
 
@@ -92,7 +95,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
 
                                     Total
-                                    <span>RS.<%=total%></span>
+                                    <span>$.<%=total*0.012%></span>
                                 </li>
 
 
@@ -100,19 +103,18 @@
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                                     <div>
-                                        <strong>Total Amount </strong>
+                                        <strong>Total Amount $</strong>
                                     </div>
-                                    <span id="total" </span>
-                                        <input type="hidden" name="" id="final">
+                                    <span id="total*012"></span>
+                                    <input type="hidden" name="" id="final">
                                 </li>
                             </ul>
                             <div class="col">
                                 <div class="mt-0">
-                                    <input type="number" name="total" value="<%=total%>">
-                                    <input type="text" name="address" value="add">
+                                    <input type="number" name="total" value="<%=total*0.012%>">
                                     <button type="submit" value="submit"
                                         class="btn btn-success btn-lg btn-block float-end">
-                                        Pay now 
+                                        Pay now
                                     </button>
                                     </form>
                                 </div>
