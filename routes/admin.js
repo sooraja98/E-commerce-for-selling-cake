@@ -11,6 +11,9 @@ const uploadBanner = require("../config/multerBanner");
 const Coupan = require("../model/coupan");
 const Category = require("../model/category");
 const uploadCategory = require("../config/multercategory");
+const Order = require("../model/orderSchema");
+const { lookup } = require("dns");
+
 
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
@@ -286,8 +289,31 @@ router.get(
   }
 );
 
-router.get("/order-mangements", adminController.adminsession, (req, res) => {
-  res.render("admin/partials/order-mangement");
+router.get("/order-mangements", adminController.adminsession, async(req, res) => {
+  const order=  await Order.aggregate([{
+    $lookup: {
+      from: "addresses",
+      localField: "addresses",
+      foreignField: "_id",
+      as: "addressData",
+    },  
+},
+{
+  $lookup: {
+    from: "users",
+    localField: "userId",
+    foreignField: "name",
+    as: "userData",
+  }, 
+},
+{
+  $unwind:"$addressData"
+},
+
+])
+
+  console.log(order);
+  res.render("admin/partials/order-mangement",{order});
 });
 
 module.exports = router;

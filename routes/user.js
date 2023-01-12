@@ -21,6 +21,7 @@ const Wish = require("../model/wishSchema");
 const userCheck = require("../controllers/userCheck");
 const paypal = require("paypal-rest-sdk");
 const Coupan = require("../model/coupan");
+const Order=require('../model/orderSchema')
 
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -142,11 +143,44 @@ router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
 });
 
 router.post("/payment", userSession.iSLogin, async (req, res) => {
-  const userId = req.session.uderId;
+  const gtotal=req.body.grandtotal
+  const userId = req.session.userId;
   const address = req.body.address;
+  console.log(gtotal);
+  const cart = await Cart.aggregate([
+    {
+      $match: {
+        userId: new mongooes.Types.ObjectId(userId),
+      },
+    },
+    {
+      $unwind: "$cartItem",
+    },
+    {
+      $project: {
+        productItem: "$cartItem.productId",
+        qtyItem: "$cartItem.qty",
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "productItem",
+        foreignField: "_id",
+        as: "catData",
+      },
+    },
 
-  const cart = await Cart.findOne({ _id: userId });
-
+    {
+      $project: {
+        productItem: "$productItem",
+        name: "$catData.name",
+        price: "$catData.price",
+        qty: "$qtyItem",
+      },
+    },
+  ]);
+  console.log(userId, address, cart);
   const price1 = parseInt(req.body.total);
   const price = price1;
   const create_payment_json = {
@@ -180,13 +214,21 @@ router.post("/payment", userSession.iSLogin, async (req, res) => {
     ],
   };
 
-  paypal.payment.create(create_payment_json, function (error, payment) {
+  paypal.payment.create(create_payment_json, async function (error, payment) {
     if (error) {
       throw error;
     } else {
       for (let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
+          const order=await Order.insertMany([{
+           userId:userId,
+          product:cart,
+          addresses:address,
+          total:gtotal
+          }])
+          
+
         }
       }
     }

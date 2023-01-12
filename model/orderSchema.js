@@ -7,22 +7,17 @@ const orderSchema = new Schema({
         type:mongoose.SchemaTypes.ObjectId,
         ref:'User'
     },
-    product:{},
-    addresses:[{
-        address:String,
-        phone:String,
-        city:String,
-        pincode:String,
-        }],
+    product:{type:Array},
+    addresses:mongoose.SchemaTypes.ObjectId,
     status:{
         type:String,
         default:'Placed',
     },
-    date:{
-        default:Date.now
+    date:{type:Date,
+        default:Date.now()
     },
     total:{
-        type:String
+        type:Number
     },
    
   

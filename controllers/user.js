@@ -265,7 +265,7 @@ module.exports = {
         },
       },
     ]);
-    console.log(cartList);
+   
     res.render("user/partials/cart", {
       cartList: cartList,
       userId: req.session.userId,
