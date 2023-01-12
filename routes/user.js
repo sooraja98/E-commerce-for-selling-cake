@@ -188,8 +188,8 @@ router.post("/payment", userSession.iSLogin, async (req, res) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://localhost:5000",
-      cancel_url: "http://localhost:5000/shop",
+      return_url: "http://localhost:5000/order",
+      cancel_url: "http://localhost:5000",
     },
     transactions: [
       {
@@ -334,7 +334,6 @@ router.patch("/couponcheck", async (req, res) => {
         finalPrice: finalPrice,
       },
     });
-    console.log("123425364755321`");
   }
 });
 module.exports = router;
