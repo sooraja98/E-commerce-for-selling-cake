@@ -1,45 +1,58 @@
 <%- include('../layouts/admin-header')%>
 
     <div class="container">
-      
+
         <section>
             <div class="text-center mt-4">
                 <h1>Order Management</h1>
             </div>
         </section>
         <section class="mt-2 ">
-                <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
-           
-                    <thead>
-                        <a href="generate"><button class="btn btn-success">Download the oreder list</button></a>
+            <table id="example" class="table mt-5 table-hover table-light style=" width: 100%">
+
+                <thead>
+                    <a href="generate"><button class="btn btn-success">Download the oreder list</button></a>
+                    <tr>
+                        <th scope="col">username</th>
+                        <th scope="col">address</th>
+                        <th scope="col">order date</th>
+                        <th scope="col">product</th>
+                        <th scope="col">price</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">action</th>
+
+                    </tr>
+                    <% order.forEach((item)=>{%>
                         <tr>
-                            <th scope="col">username</th>
-                            <th scope="col">address</th>
-                            <th scope="col">order date</th>
-                            <th scope="col">product</th>  
-                            <th scope="col">price</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">action</th>
+                            <td scope="col">
+                                <%=item.userData[0].name%>
+                            </td>
+                            <td scope="col">
+                                <%=item.addressData.address%><br>
+                                    <%=item.addressData.phone%><br>
+                                        <%=item.addressData.city%><br>
+                                            <%=item.addressData.pincode%>
+                            </td>
+                            <td scope="col">
+                                <%=item.date%>
+                            </td>
+                            <td scope="col">
+                                <%=item.product[0].name%>
+                            </td>
+                            <td scope="col">
+                                <%=item.product[0].price%>
+                            </td>
+                            <td scope="col"><%=item.status%></td>
+                            <td scope='col'><a href="orderstatuschange?id=<%=item._id%>" class="btn btn-success">Status change</a></td>
 
                         </tr>
-                        <% order.forEach((item)=>{%>
-                        <tr>
-                            <td scope="col"><%=item.userData[0].name%></td>
-                            <td scope="col"><%=item.addressData.address%></td>
-                            <td scope="col"><%=item.date%></td>
-                            <td scope="col"><%=item.product[0].name%></td>
-                            <td scope="col"><%=item.product[0].price%></td>
-                            <td scope="col">Pending</td>
-                            <td scope='col'><a href="" class="btn btn-success">Status change</a></td>
+                        <%})%>
 
-                        </tr>
-                       <%})%>
+                </thead>
+                <tbody>
 
-                    </thead>
-                    <tbody>    
-
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
         </section>
     </div>
 

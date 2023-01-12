@@ -317,7 +317,7 @@ router.get("/order", userSession.iSLogin,async (req, res) => {
 
   res.render("user/partials/order", {
     usersession: req.session.username,
-    userId: req.session.userId,order
+    userId: req.session.userId,order:order
   });
 });
 

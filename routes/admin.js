@@ -14,7 +14,6 @@ const uploadCategory = require("../config/multercategory");
 const Order = require("../model/orderSchema");
 const { lookup } = require("dns");
 
-
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
   cloud_name: "dvpvoqgia",
@@ -289,31 +288,111 @@ router.get(
   }
 );
 
-router.get("/order-mangements", adminController.adminsession, async(req, res) => {
-  const order=  await Order.aggregate([{
-    $lookup: {
-      from: "addresses",
-      localField: "addresses",
-      foreignField: "_id",
-      as: "addressData",
-    },  
-},
-{
-  $lookup: {
-    from: "users",
-    localField: "userId",
-    foreignField: "_id",
-    as: "userData",
-  }, 
-},
-{
-  $unwind:"$addressData"
-},
+router.get(
+  "/order-mangements",
+  adminController.adminsession,
+  async (req, res) => {
+    const order = await Order.aggregate([
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "addresses",
+          foreignField: "_id",
+          as: "addressData",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $unwind: "$addressData",
+      },
+    ]);
 
-])
+    res.render("admin/partials/order-mangement", { order:order });
+  }
+);
 
-  console.log(order);
-  res.render("admin/partials/order-mangement",{order});
+
+
+
+
+
+
+router.get("/generate", async (req, res)=> {
+  let orderData = await Order.aggregate([
+    { $match: { status: "Placed" } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "orderUserData",
+      },
+    },
+  ]);
+
+  let salesData = []; //this array is created because the sales report template cannot read the data like this.user[0].fName??????????????????
+  for (let i = 0; i < orderData.length; i++) {
+    let order = {
+      address: orderData[i].address.houseName,
+      fName: orderData[i].user[0].fName,
+      netAmount: orderData[i].netAmount,
+      status: orderData[i].status,
+      orderDate: orderData[i].orderDate,
+    };
+    salesData.push(order);
+  }
+
+  let totalAmount = 0;
+  for (let i = 0; i < orderData.length; i++) {
+    totalAmount = totalAmount + orderData[i].netAmount;
+  }
+
+  const html = fs.readFileSync(
+    path.join(__dirname, "../views/adminFiles/salesReport/reportTemplate.html"),
+    "utf-8"
+  );
+  const filename = Math.random() + "_doc" + ".pdf";
+  const filepath = "/public/salesReports/" + filename;
+
+  const document = {
+    html: html,
+    data: { salesData, totalAmount },
+    path: "./public/salesReports/" + filename,
+  };
+  pdf
+    .create(document)
+    .then((resolve) => {
+      console.log(resolve);
+      res.redirect(`/admin/orders?genarated=${true}&path=${filepath}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
+
+router.get('/orderstatuschange',adminController.adminsession,async(req,res)=>{
+  const orderId = req.query.id;
+    const orderdetails = await Order.findById(orderId);
+    let orderList = orderdetails.status;
+    if (orderList == "Placed") {
+      orderList = "not placed";
+    } else if (orderList == "not placed") {
+      orderList = "Placed";
+    }
+    await Category.findByIdAndUpdate(orderId, {
+      $set: { status: orderList },
+    });
+    res.redirect("order-mangements");
+
+})
+
+
 
 module.exports = router;
