@@ -24,7 +24,7 @@
                         </tr>
                         <% order.forEach((item)=>{%>
                         <tr>
-                            <td scope="col"><%=item.userData.name%></td>
+                            <td scope="col"><%=item.userData[0].name%></td>
                             <td scope="col"><%=item.addressData.address%></td>
                             <td scope="col"><%=item.date%></td>
                             <td scope="col"><%=item.product[0].name%></td>
