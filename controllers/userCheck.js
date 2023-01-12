@@ -6,8 +6,8 @@ module.exports = {
       if (req.session.userId) {
       } else {
         res.redirect("/");
-        next();
       }
+      next();
     } catch (err) {
       console.log("error in is Login" + err);
     }

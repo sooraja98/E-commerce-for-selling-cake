@@ -170,7 +170,6 @@ router.post("/payment", userSession.iSLogin, async (req, res) => {
         as: "catData",
       },
     },
-
     {
       $project: {
         productItem: "$productItem",
@@ -291,10 +290,34 @@ router.get("/less", async (req, res) => {
   }
 });
 
-router.get("/order", userSession.iSLogin, (req, res) => {
+router.get("/order", userSession.iSLogin,async (req, res) => {
+
+  const order=  await Order.aggregate([{
+    $lookup: {
+      from: "addresses",
+      localField: "addresses",
+      foreignField: "_id",
+      as: "addressData",
+    },  
+},
+{
+  $lookup: {
+    from: "users",
+    localField: "userId",
+    foreignField: "name",
+    as: "userData",
+  }, 
+},
+{
+  $unwind:"$addressData"
+},
+
+])
+
+
   res.render("user/partials/order", {
     usersession: req.session.username,
-    userId: req.session.userId,
+    userId: req.session.userId,order
   });
 });
 
