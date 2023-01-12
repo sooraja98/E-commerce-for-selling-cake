@@ -229,7 +229,7 @@ module.exports = {
 
   //tocart
   ToCart: async (req, res) => {
-    var userId = req.session.userId;
+    const userId = req.session.userId;
 
     const cartList = await Cart.aggregate([
       {
@@ -277,8 +277,8 @@ module.exports = {
   //addtocart
   addToCart: async (req, res) => {
     let productId = req.query.productId;
-    var Id = req.query.userId;
-    var userId = mongooes.Types.ObjectId(Id);
+    const Id = req.query.userId;
+    const userId = mongooes.Types.ObjectId(Id);
     const cartData = await Cart.findOne({ userId: userId });
     if (cartData) {
       let itemIndex = cartData.cartItem.findIndex((cartItem) => {

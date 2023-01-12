@@ -11,7 +11,7 @@ const orderSchema = new Schema({
     addresses:[{
         address:String,
         phone:String,
-        name:String,
+        city:String,
         pincode:String,
         }],
     status:{

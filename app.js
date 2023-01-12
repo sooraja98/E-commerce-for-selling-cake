@@ -1,15 +1,15 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const mongoose = require("mongoose");
 require("./config/connection");
 mongoose.set("strictQuery", false);
 const session = require("express-session");
-var adminRouter = require("./routes/admin");
-var userRouter = require("./routes/user");
-var paypal = require("paypal-rest-sdk");
+const adminRouter = require("./routes/admin");
+const userRouter = require("./routes/user");
+const paypal = require("paypal-rest-sdk");
 paypal.configure({
   mode: "sandbox", //sandbox or live
   client_id:
@@ -18,7 +18,7 @@ paypal.configure({
     "ECe3UMFpNHcJOcqPPZBj-18EZQTJyt5BrGjg10us99wNueLJW1NGw3lYEEKYJ8GCWICwU1XgFkvmANQ6",
 });
 
-var app = express();
+const app = express();
 const fileupload = require("express-fileupload");
 app.use(
   fileupload({

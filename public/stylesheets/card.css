@@ -3,8 +3,8 @@
 
 body {
   background: #dfc2f2;
-  background: -webkit-linear-gradient(to right, #FBF7E9, #E2C9BE);
-  background: linear-gradient(to right, #FBF7E9, #E2C9BE);
+  background: -webkit-linear-gradient(to right, #ffffff, #ffffff);
+  background: linear-gradient(to right, #FBF7E9, #ffffff);
   background-attachment: fixed;
   background-size: cover;
 }

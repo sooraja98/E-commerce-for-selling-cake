@@ -1,23 +1,15 @@
-const User=require('../model/schema')
-   
+const User = require("../model/schema");
 
-
-module.exports={
-
-    iSValid:async(req,res,next)=>{
-           try{
-            const user=await User.findById({_id:req.session.userId})
-            const userCheck=user.verified
-                if(userCheck)
-                    {}
-                    else{
-                        res.redirect("/")
-                    }
-                    next()
-           }
-           catch(err){
-                console.log("error in is Login"+err);
-           }
+module.exports = {
+  iSValid: async (req, res, next) => {
+    try {
+      if (req.session.userId) {
+      } else {
+        res.redirect("/");
+        next();
+      }
+    } catch (err) {
+      console.log("error in is Login" + err);
     }
-
-}
+  },
+};

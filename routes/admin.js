@@ -1,5 +1,5 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const Banner = require("../model/bannerSchema");
 const { hasSubscribers } = require("diagnostics_channel");
 const User = require("../model/schema");
@@ -12,7 +12,7 @@ const Coupan = require("../model/coupan");
 const Category = require("../model/category");
 const uploadCategory = require("../config/multercategory");
 
-var cloudinary = require("cloudinary").v2;
+const cloudinary = require("cloudinary").v2;
 cloudinary.config({
   cloud_name: "dvpvoqgia",
   api_key: "887845154618411",

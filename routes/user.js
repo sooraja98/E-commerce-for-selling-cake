@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
-var mongodb = require("mongodb");
-var bcrypt = require("bcrypt");
+const express = require("express");
+const router = express.Router();
+const mongodb = require("mongodb");
+const bcrypt = require("bcrypt");
 require("../config/connection");
-var User = require("../model/schema");
+const User = require("../model/schema");
 const userController = require("../controllers/user");
 const { Router } = require("express");
 const userSession = require("../middileware/userLogin");
@@ -19,7 +19,9 @@ const { login, userProductView } = require("../controllers/user");
 const Address = require("../model/addressSchema");
 const Wish = require("../model/wishSchema");
 const userCheck = require("../controllers/userCheck");
-var paypal = require("paypal-rest-sdk");
+const paypal = require("paypal-rest-sdk");
+const Coupan = require("../model/coupan");
+
 paypal.configure({
   mode: "sandbox", //sandbox or live
   client_id:
@@ -139,11 +141,14 @@ router.get("/deleteWish", userSession.iSLogin, async (req, res) => {
   res.redirect("shop");
 });
 
-router.post("/payment", userSession.iSLogin, (req, res) => {
+router.post("/payment", userSession.iSLogin, async (req, res) => {
+  const userId = req.session.uderId;
   const address = req.body.address;
-  var price = parseInt(req.body.total);
-  var price = price;
-  console.log(price);
+
+  const cart = await Cart.findOne({ _id: userId });
+
+  const price1 = parseInt(req.body.total);
+  const price = price1;
   const create_payment_json = {
     intent: "sale",
     payer: {
@@ -182,9 +187,6 @@ router.post("/payment", userSession.iSLogin, (req, res) => {
       for (let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
-
-
-
         }
       }
     }
@@ -254,4 +256,20 @@ router.get("/order", userSession.iSLogin, (req, res) => {
   });
 });
 
+router.patch("/couponcheck", async (req, res) => {
+  const cartPrice = req.body.cartPrice;
+  const coupan = await Coupan.findOne({ name: req.body.couponCode });
+  console.log(req.body.couponCode);
+  if (coupan) {
+    const discountPrice = (cartPrice * coupan.offer) / 100;
+    const finalPrice = cartPrice - discountPrice;
+    res.json({
+      data: {
+        discountPrice: discountPrice,
+        finalPrice: finalPrice,
+      },
+    });
+    console.log("123425364755321`");
+  }
+});
 module.exports = router;

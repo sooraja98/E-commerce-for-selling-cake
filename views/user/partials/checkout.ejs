@@ -76,10 +76,14 @@
                                     <div class="form-outline mt-3">
                                         <label for="coupon"><strong>Enter your coupon code here</strong></label>
                                         <div class="input-group form-outline mt-2 mb-2">
-                                            <input type="text" class="form-control" placeholder="Enter here">
-                                            <button id="button-addon3" type="button"
-                                                class="btn btn-dark px-4 rounded-pill"><i
-                                                    class="fa fa-gift mr-2"></i>Apply coupon</button>
+
+                                            <input type="text" class="form-control" placeholder="Enter here"
+                                                name="coupan" id="coupon" onkeyup="checkcoupan()">
+
+
+                                            
+
+
                                         </div>
                                     </div>
 
@@ -94,10 +98,17 @@
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
 
-                                    Total
-                                    <span>$.<%=total*0.012%></span>
+                                    price
+
+                                    <span>RS.<%=total%>/($.<%=total*0.012%>)</span>
                                 </li>
 
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+
+                                Discount
+
+                                    <span id="discount">RS:0</span>
+                                </li>
 
 
                                 <li
@@ -105,13 +116,14 @@
                                     <div>
                                         <strong>Total Amount $</strong>
                                     </div>
-                                    <span id="total*012"></span>
+                                    <span id="total*.012"></span>
                                     <input type="hidden" name="" id="final">
                                 </li>
                             </ul>
+                            <input type="text" name="" id="cartPrice" value="<%=total%>" hidden>
                             <div class="col">
                                 <div class="mt-0">
-                                    <input type="number" name="total" value="<%=total*0.012%>">
+                                    <input type="number" name="total" value="<%=total*0.012%>" id="finalprice">
                                     <button type="submit" value="submit"
                                         class="btn btn-success btn-lg btn-block float-end">
                                         Pay now
@@ -125,6 +137,24 @@
             </div>
         </div>
         </div>
+
+        <script>
+            checkcoupan=()=>{
+             $.ajax({
+                 url: "/couponcheck",
+                method: "patch",
+                 data: {
+                     couponCode: $("#coupon").val(),
+                     cartPrice:$("#cartPrice").val()
+                 },
+                 success:(res)=>{
+                    $('#finalprice').val(res.data.finalPrice)
+                    $('#discount').html(res.data.discountPrice)
+                    console.log(res.data.discountPrice);
+                 }
+             })
+            }
+         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
