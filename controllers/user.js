@@ -615,6 +615,229 @@ deleteWish: async (req, res) => {
   res.redirect("shop");
 },
 
+checkout:async (req, res) => {
+  const total = req.body.total;
+  console.log(total);
+  const userEmail = await User.findById({ _id: req.session.userId });
+  const email = userEmail.email;
+  const address = await Address.find({ user_id: email });
+  res.render("user/partials/checkout", { total: total, address: address });
+},
+wishlist:async (req, res) => {
+  const userId = req.session.userId;
+  const wish = await Wish.findOne({ userId: userId }).populate("productId");
+  res.render("user/partials/wishlist", {
+    usersession: req.session.username,
+    userId: req.session.userId,
+    wish: wish,
+  });
+},
+deletewishlist:async (req, res) => {
+  const userId = req.query.userId;
+  const productId = req.query.productId;
+  const remove = await Wish.updateOne(
+    { userId: userId },
+    {
+      $pull: { productId: mongooes.Types.ObjectId(productId) },
+    }
+  );
+  res.redirect("shop");
+},
+payment:async (req, res) => {
+  const gtotal=req.body.grandtotal
+  const userId = req.session.userId;
+  const address = req.body.address;
+  console.log(gtotal);
+  const cart = await Cart.aggregate([
+    {
+      $match: {
+        userId: new mongooes.Types.ObjectId(userId),
+      },
+    },
+    {
+      $unwind: "$cartItem",
+    },
+    {
+      $project: {
+        productItem: "$cartItem.productId",
+        qtyItem: "$cartItem.qty",
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "productItem",
+        foreignField: "_id",
+        as: "catData",
+      },
+    },
+    {
+      $project: {
+        productItem: "$productItem",
+        name: "$catData.name",
+        price: "$catData.price",
+        qty: "$qtyItem",
+      },
+    },
+  ]);
+  console.log(userId, address, cart);
+  const price1 = parseInt(req.body.total);
+  const price = price1;
+  const create_payment_json = {
+    intent: "sale",
+    payer: {
+      payment_method: "paypal",
+    },
+    redirect_urls: {
+      return_url: "http://localhost:5000/order",
+      cancel_url: "http://localhost:5000",
+    },
+    transactions: [
+      {
+        item_list: {
+          items: [
+            {
+              name: "Red Sox Hat",
+              sku: "001",
+              price: price,
+              currency: "USD",
+              quantity: 1,
+            },
+          ],
+        },
+        amount: {
+          currency: "USD",
+          total: price,
+        },
+        description: "Hat for the best team ever",
+      },
+    ],
+  };
+
+  paypal.payment.create(create_payment_json, async function (error, payment) {
+    if (error) {
+      throw error;
+    } else {
+      for (let i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === "approval_url") {
+          res.redirect(payment.links[i].href);
+          const order=await Order.insertMany([{
+           userId:userId,
+          product:cart,
+          addresses:address,
+          total:gtotal
+          }])
+          
+
+        }
+      }
+    }
+  });
+},
+paymentsuccessful: (req, res) => {
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+
+  const execute_payment_json = {
+    payer_id: payerId,
+    transactions: [
+      {
+        amount: {
+          currency: "USD",
+          total: price,
+        },
+      },
+    ],
+  };
+
+  paypal.payment.execute(
+    paymentId,
+    execute_payment_json,
+    function (error, payment) {
+      if (error) {
+        console.log(error.response);
+        throw error;
+      } else {
+        console.log(JSON.stringify(payment));
+        res.send("Success");
+      }
+    }
+  );
+},
+
+paymentmore:async (req, res) => {
+  try {
+    const product = await Product.find().sort({ price: -1 });
+    res.render("user/partials/userProductView", {
+      usersession: req.session.username,
+      userId: req.session.userId,
+      category: product,
+    });
+  } catch (error) {
+    console.log("sort error" + error);
+  }
+},
+paymentless:async (req, res) => {
+  try {
+    const product = await Product.find().sort({ price: 1 });
+    res.render("user/partials/userProductView", {
+      usersession: req.session.username,
+      userId: req.session.userId,
+      category: product,
+    });
+  } catch (error) {
+    console.log("sort error" + error);
+  }
+},
+
+orderget:async (req, res) => {
+
+  const order1=  await Order.aggregate([{
+    $lookup: {
+      from: "addresses",
+      localField: "addresses",
+      foreignField: "_id",
+      as: "addressData",
+    },  
+},
+{
+  $lookup: {
+    from: "users",
+    localField: "userId",
+    foreignField: "name",
+    as: "userData",
+  }, 
+},
+{
+  $unwind:"$addressData"
+},
+
+])
+
+
+  res.render("user/partials/order", {
+    usersession: req.session.username,
+    userId: req.session.userId,order1:order1
+  });
+},
+coupancheck:async (req, res) => {
+  const cartPrice = req.body.cartPrice;
+  const coupan = await Coupan.findOne({ name: req.body.couponCode });
+  console.log(req.body.couponCode);
+  if (coupan) {
+    const discountPrice = (cartPrice * coupan.offer) / 100;
+    const finalPrice = cartPrice - discountPrice;
+    res.json({
+      data: {
+        discountPrice: discountPrice,
+        finalPrice: finalPrice,
+      },
+    });
+  }
+},
+getaddaddress:async (req, res) => {
+  res.render("user/partials/add-address", {userId: req.session.userId});
+},
 
 
 
