@@ -8,13 +8,12 @@ const Wish=require('../model/wishSchema')
 const mongooes = require("mongoose");
 const Cart= require('../model/cart')
 let user;
-module.exports = {
+const userController = {
 
   //home
   home: async (req, res, next) => {
     let user = await User.find({ _id: req.session.userId });
     let productData = await Product.find({ list: true });
-    console.log("HELO " + req.session.userId);
     res.render("user/partials/index", {
       usersession: req.session.username,
       productData: productData,
@@ -25,7 +24,7 @@ module.exports = {
 
 
 //logout
-  logout: (req, res) => {
+  logout: async(req, res) => {
     req.session.destroy();
     res.redirect("/");
   },
@@ -78,6 +77,7 @@ module.exports = {
     }
   },
 
+  
 
     //otpverification  
   otpverfication: async (req, res) => {
@@ -840,7 +840,5 @@ getaddaddress:async (req, res) => {
 },
 
 
-
-
-
 };
+module.exports = userController;
